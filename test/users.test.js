@@ -18,7 +18,7 @@ describe("Users Endpoints", () => {
   afterAll(() => {
   });
 
-  test("this is just a sample test", async () => {
+  test("Test user input (unique) ", async () => {
     const user = MockUser.generate();
     const options = {
       method: "POST",
@@ -37,17 +37,43 @@ describe("Users Endpoints", () => {
   });
 
   /**
-   * Valid Event Insertion
+   * Invalid User Insertion
    */
-  test("should insert an event into the database", () => {
-
-  });
+  test("Error handling on duplicate insertion", async () => {
+    const options = {
+      method: "POST",
+      uri: URL,
+      body: {
+        firstName: 'shayne',
+        lastName: 'preston',
+        email: 'prests@rpi.edu',
+        password: 'password',
+      },
+      json: true
+    };
+    try {
+      await request(options);
+      fail("duplicate insertion should cause an exception");
+    } catch (error) {
+      expect(error.message).toContain('400 - "Bad Request"');
+    }
+  }); 
 
   /**
    * Invalid Event Insertion (Duplicate)
    */
-  test("should fail to insert a duplicate event into the database", () => {
-
+  test("search by email", async () => {
+    const options = {
+      method: "POST",
+      uri: URL+'/email',
+      body: {
+        email: 'prests@rpi.edu',
+      },
+      json: true
+    };
+    const response = await request(options);
+    console.log(response);
+    expect(response).not.toBe(null)
   });
 
 });
