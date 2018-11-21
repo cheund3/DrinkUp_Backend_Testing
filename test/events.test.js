@@ -2,7 +2,7 @@
 
 import request from "request-promise";
 
-import MockEvent from "./_mocks/MockEvent";
+import {MockEvent} from "./_mocks/MockEvent";
 
 const URL = "http://ec2-18-217-242-211.us-east-2.compute.amazonaws.com:3000/api/events"; // use caps for global constants
 
@@ -23,12 +23,16 @@ describe("Events Endpoints", () => {
   /**
    * Sample Test
    */
-  it("this is just a sample test", async () => {
+  test("this is just a sample test", async () => {
     // Documentation for request-promise: https://github.com/request/request-promise
     const event = MockEvent.generate();
     const options = {
       method: "POST",
-      uri: URL
+      uri: URL,
+      body: {
+        name: event.name
+      },
+      json: true
     };
     const response = await request(options);
     console.log(response);
@@ -38,14 +42,14 @@ describe("Events Endpoints", () => {
   /**
    * Valid Event Insertion
    */
-  it("should insert an event into the database", () => {
+  test("it should insert an event into the database", () => {
 
   });
 
   /**
    * Invalid Event Insertion (Duplicate)
    */
-  it("should fail to insert a duplicate event into the database", () => {
+  test("it should fail to insert a duplicate event into the database", () => {
 
   });
 

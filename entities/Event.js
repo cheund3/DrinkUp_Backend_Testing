@@ -4,7 +4,7 @@
  * Event Entity
  * @author Dylan L. Cheung <cheund3@rpi.edu>
  */
-export default class Event {
+export class Event {
 
   constructor( name, testId ) {
     this._name = name;

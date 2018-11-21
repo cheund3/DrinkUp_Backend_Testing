@@ -1,13 +1,13 @@
 "use strict";
 
 import Chance from "chance";
-import Event from "../../entities/Event";
+import {Event} from "../../entities/Event";
 const chanceInstance = new Chance();
 
 const MIN_EXT_ID = 10000000;
 const MAX_EXT_ID = 99999999;
 
-export default class MockEvent {
+export class MockEvent {
 
   static generate() {
     const testString = chanceInstance.name();
