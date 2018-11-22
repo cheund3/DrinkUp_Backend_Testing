@@ -76,4 +76,29 @@ describe("Users Endpoints", () => {
     expect(response).not.toBe(null)
   });
 
+  /**
+   * Get users
+   */
+  test("Get all users", async () => {
+    const options = {
+      method: "GET",
+      uri: URL
+    };
+    const response = await request(options);
+    console.log(response);
+    expect(response).not.toBe(null)
+  });
+
+  /**
+   * Get user by ID
+   */
+  test("Get all users", async () => {
+    const options = {
+      method: "GET",
+      uri: URL +'/25'
+    };
+    const response = await request(options);
+    console.log(response);
+    expect(response).not.toBe(null)
+  });
 });
