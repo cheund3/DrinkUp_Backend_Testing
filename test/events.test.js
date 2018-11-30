@@ -21,7 +21,7 @@ describe("Events Endpoints", () => {
   });
 
   /**
-   * Sample Test
+   * Test to add an event
    */
   test("this is just a sample test", async () => {
     // Documentation for request-promise: https://github.com/request/request-promise
@@ -30,7 +30,7 @@ describe("Events Endpoints", () => {
       method: "POST",
       uri: URL,
       body: {
-        name: event.name
+        name: event.name,
       },
       json: true
     };

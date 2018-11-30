@@ -18,6 +18,7 @@ describe("Users Endpoints", () => {
   afterAll(() => {
   });
 
+  //Test to add a user to DB
   test("Test user input (unique) ", async () => {
     const user = MockUser.generate();
     const options = {
@@ -60,7 +61,7 @@ describe("Users Endpoints", () => {
   }); 
 
   /**
-   * Invalid Event Insertion (Duplicate)
+   * Search for email
    */
   test("search by email", async () => {
     const options = {

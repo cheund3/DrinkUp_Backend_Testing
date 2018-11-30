@@ -12,6 +12,8 @@ Jest testing for SD&D Drink Up Backend endpoints.
 + Add unique person
 + Check to make sure duplicate emails cannot be added
 + search by email
++ Get all Users
++ Get users by ID
 
 #### Events:
 
