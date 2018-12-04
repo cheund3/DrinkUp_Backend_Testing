@@ -18,12 +18,11 @@ describe("Users Endpoints", () => {
   afterAll(() => {
   });
 
-  //Test to add a user to DB
   test("Test user input (unique) ", async () => {
     const user = MockUser.generate();
     const options = {
       method: "POST",
-      uri: URL,
+      uri: URL+"/signup",
       body: {
         firstName: user.firstName,
         lastName: user.lastName,
@@ -34,7 +33,10 @@ describe("Users Endpoints", () => {
     };
     const response = await request(options);
     console.log(response);
-    expect(response).not.toBe(null)
+    expect(response.firstName).toBe(user.firstName);
+    expect(response.lastName).toBe(user.lastName);
+    expect(response.email).toBe(user.email);
+    expect(response.password).toBe(user.password);
   });
 
   /**
@@ -43,11 +45,11 @@ describe("Users Endpoints", () => {
   test("Error handling on duplicate insertion", async () => {
     const options = {
       method: "POST",
-      uri: URL,
+      uri: URL+"/signup",
       body: {
         firstName: 'shayne',
         lastName: 'preston',
-        email: 'prests@rpi.edu',
+        email: 'shayne@shayne.com',
         password: 'password',
       },
       json: true
@@ -56,50 +58,37 @@ describe("Users Endpoints", () => {
       await request(options);
       fail("duplicate insertion should cause an exception");
     } catch (error) {
-      expect(error.message).toContain('400 - "Bad Request"');
+      expect(error.message).toContain('"SequelizeUniqueConstraintError\"');
     }
   }); 
 
   /**
-   * Search for email
+   * Invalid Event Insertion (Duplicate)
    */
   test("search by email", async () => {
     const options = {
       method: "POST",
       uri: URL+'/email',
       body: {
-        email: 'prests@rpi.edu',
+        email: 'shayne@shayne.com',
       },
       json: true
     };
     const response = await request(options);
     console.log(response);
-    expect(response).not.toBe(null)
-  });
-
-  /**
-   * Get users
-   */
-  test("Get all users", async () => {
-    const options = {
-      method: "GET",
-      uri: URL
-    };
-    const response = await request(options);
-    console.log(response);
-    expect(response).not.toBe(null)
+    expect(response.email).toBe('shayne@shayne.com');
+    expect(response.id).toBe(148);
   });
 
   /**
    * Get user by ID
    */
-  test("Get all users", async () => {
+  test("Get user by ID", async () => {
     const options = {
       method: "GET",
-      uri: URL +'/25'
+      uri: URL+"/148",
     };
     const response = await request(options);
-    console.log(response);
-    expect(response).not.toBe(null)
+    expect(response).toContain('shayne@shayne.com');
   });
 });
