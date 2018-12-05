@@ -63,7 +63,7 @@ describe("Users Endpoints", () => {
   }); 
 
   /**
-   * Invalid Event Insertion (Duplicate)
+   * Search by email
    */
   test("search by email", async () => {
     const options = {
@@ -81,6 +81,26 @@ describe("Users Endpoints", () => {
   });
 
   /**
+   * Search by invalid email
+   */
+  test("Search by invalid email", async () => {
+    const option = {
+      method: "POST",
+      uri: URL+'/email',
+      body: {
+        email: 'notgoingtoberight@betterlucknexttime.net',
+      },
+      json: true
+    };
+    try {
+      await request(options)
+    } catch(error) {
+      console.log(error.message);
+      expect(error.message).toContain('options is not defined');
+    }
+  });
+
+  /**
    * Get user by ID
    */
   test("Get user by ID", async () => {
@@ -91,4 +111,86 @@ describe("Users Endpoints", () => {
     const response = await request(options);
     expect(response).toContain('shayne@shayne.com');
   });
+
+  /**
+   * Get by invalid ID
+   */
+  test("Get user by invalid ID", async () => {
+    const options = {
+      method: "GET",
+      uri: URL+"/1",
+    };
+    const response = await request(options);
+    expect(response).toBe("");
+  });
+
+  /**
+   * Update by valid ID
+   */
+  test("Update user by valid ID", async () => {
+    const options = {
+      method: "PUT",
+      uri: URL+"/148",
+      body: {
+        firstName: 'shayne',
+        lastName: 'preston',
+        email: 'shayne@shayne.com',
+        password: 'password', 
+      },
+      json: true
+    };
+    const response = await request(options);
+    console.log(response);
+    expect(response).toContain(1);
+  })
+
+  test("Update user by invalid ID", async () => {
+    const options = {
+      method: "PUT",
+      uri: URL+"/1",
+      body: {
+        firstName: 'shayne',
+        lastName: 'preston',
+        email: 'shayne@shayne.com',
+        password: 'password', 
+      },
+      json: true
+    };
+    const response = await request(options);
+    console.log(response);
+    expect(response).toContain(0);
+  })
+
+  test("signin valid email/passwod", async () => {
+    const options = {
+      method: "POST",
+      uri: URL+"/signin",
+      body: {
+        email: 'shayne@shayne.com',
+        password: 'password', 
+      },
+      json: true
+    };
+    const response = await request(options);
+    console.log(response);
+    expect(response.id).toBe(148);
+  })
+
+  test("signin invalid email/passwod", async () => {
+    const options = {
+      method: "POST",
+      uri: URL+"/signin",
+      body: {
+        email: 'shayne@shayne.com',
+        password: 'wrongpassword', 
+      },
+      json: true
+    };
+    try {
+      await request(options)
+    } catch(error) {
+      console.log(error.message);
+      expect(error.message).toContain('400 - undefined');
+    }
+  })
 });
