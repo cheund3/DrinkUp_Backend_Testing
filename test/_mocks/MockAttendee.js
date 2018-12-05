@@ -5,21 +5,23 @@
 "use strict";
 
 import Chance from "chance";
-import {User} from "../../entities/Attendee";
+import {Attendee} from "../../entities/Attendee";
 const chanceInstance = new Chance();
 
 const MIN_EXT_ID = 0;
 const MAX_EXT_ID = 200;
 
-export class MockUser {
+const MIN_LIC = 111111
+const MAX_LIC = 999999
+export class MockAttendee {
 
   static generate() {
     const firstName = chanceInstance.name();
     const middleName = chanceInstance.name();
     const lastName = chanceInstance.name();
-    const email = chanceInstance.name() + "@gmail.com";
-    const password = chanceInstance.integer({ min: MIN_EXT_ID, max: MAX_EXT_ID }) + chanceInstance.name(); + chanceInstance.integer({ min: MIN_EXT_ID, max: MAX_EXT_ID });
-    return new User(firstName, lastName, email, password);
+    const age = chanceInstance.integer({ min: MIN_EXT_ID, max: MAX_EXT_ID});
+    const licenseNumber = chanceInstance.integer({min: MIN_LIC, max: MAX_LIC});
+    return new Attendee(firstName, middleName, lastName, age, licenseNumber);
   }
 
 }
