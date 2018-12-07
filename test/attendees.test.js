@@ -55,10 +55,6 @@ describe("Attendees Endpoints", () => {
       expect(response.eventId).toBe(111);
       attendeeID = response.id;
     });
-  
-    /**
-     * Get event by ID
-     */
     
     test("Get attendee by ID", async () => {
       const options = {

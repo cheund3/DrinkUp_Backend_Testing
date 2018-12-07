@@ -50,9 +50,6 @@ describe("Users Endpoints", () => {
     userID = response.id;
   });
 
-  /**
-   * Invalid User Insertion
-   */
   test("Error handling on duplicate insertion", async () => {
     const options = {
       method: "POST",
@@ -70,9 +67,6 @@ describe("Users Endpoints", () => {
     }
   }); 
 
-  /**
-   * Search by email
-   */
   test("search by email", async () => {
     const options = {
       method: "POST",
@@ -88,9 +82,6 @@ describe("Users Endpoints", () => {
     expect(response.id).toBe(userID);
   });
 
-  /**
-   * Search by invalid email
-   */
   test("Search by invalid email", async () => {
     const option = {
       method: "POST",
@@ -108,9 +99,6 @@ describe("Users Endpoints", () => {
     }
   });
 
-  /**
-   * Get user by ID
-   */
   test("Get user by ID", async () => {
     const options = {
       method: "GET",
@@ -120,9 +108,6 @@ describe("Users Endpoints", () => {
     expect(response).toContain(user.email);
   });
 
-  /**
-   * Get by invalid ID
-   */
   test("Get user by invalid ID", async () => {
     const options = {
       method: "GET",
@@ -166,9 +151,6 @@ describe("Users Endpoints", () => {
     }
   });
 
-  /**
-   * Update by valid ID
-   */
   test("Update user by valid ID", async () => {
     const options = {
       method: "PUT",

@@ -49,16 +49,6 @@ describe("Events Endpoints", () => {
     eventID = response.id;
   });
 
-  /**
-   * Invalid Event Insertion (Duplicate)
-   */
-  test("it should fail to insert a duplicate event into the database", () => {
-
-  });
-
-  /**
-   * Get event by ID
-   */
   test("Get event by ID", async () => {
     const options = {
       method: "GET",
