@@ -6,6 +6,8 @@ import {MockEvent} from "./_mocks/MockEvent";
 import { stringify } from "querystring";
 
 const URL = "http://ec2-18-217-242-211.us-east-2.compute.amazonaws.com:3000/api/events"; // use caps for global constants
+var event;
+var eventID;
 
 /**
  * Events Endpoint - Test Suite
@@ -14,11 +16,16 @@ const URL = "http://ec2-18-217-242-211.us-east-2.compute.amazonaws.com:3000/api/
 describe("Events Endpoints", () => {
 
   beforeAll(() => {
-    // Leave empty if nothing to do before all tests below are run
+    event = MockEvent.generate();
+    console.log(event);
   });
 
-  afterAll(() => {
-    // Leave empty if no clean up is needed
+  afterAll(async () => {
+    const options = {
+      method: "DELETE",
+      uri: URL+"/"+eventID
+    };
+    const response = await request(options);
   });
 
   /**
@@ -26,19 +33,20 @@ describe("Events Endpoints", () => {
    */
   test("this is just a sample test", async () => {
     // Documentation for request-promise: https://github.com/request/request-promise
-    const event = MockEvent.generate();
     const options = {
       method: "POST",
       uri: URL,
       body: {
         name: event.name,
-        owner: 1
+        owner: event.testId
       },
       json: true
     };
     const response = await request(options);
     console.log(response);
-    expect(response).not.toBe(null)
+    expect(response.name).toBe(event.name);
+    expect(response.owner).toBe(event.testId);
+    eventID = response.id;
   });
 
   /**
@@ -54,16 +62,17 @@ describe("Events Endpoints", () => {
   test("Get event by ID", async () => {
     const options = {
       method: "GET",
-      uri: URL+"/185",
+      uri: URL+"/"+eventID,
     };
     const response = await request(options);
-    expect(response).toContain('Test Event');
+    console.log(response);
+    expect(response).toContain(event.testId);
   });
 
   test("Get event by invalid ID", async () => {
     const options = {
       method: "GET",
-      uri: URL+"/1",
+      uri: URL+"/0",
     };
     const response = await request(options);
     expect(response).toBe('');
@@ -74,7 +83,7 @@ describe("Events Endpoints", () => {
       method: "POST",
       uri: URL+"/ownerEvents",
       body: {
-        owner: '148',
+        owner: event.testId,
         completed: false
       },
       json: true

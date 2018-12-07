@@ -5,7 +5,8 @@ import request from "request-promise";
 import {MockUser} from "./_mocks/MockUser";
 
 const URL = "http://ec2-18-217-242-211.us-east-2.compute.amazonaws.com:3000/api/users";
-
+var user;
+var userID;
 /**
  * Users Endpoint - Test Suite
  * @author Dylan L. Cheung <cheund3@rpi.edu>
@@ -13,13 +14,22 @@ const URL = "http://ec2-18-217-242-211.us-east-2.compute.amazonaws.com:3000/api/
 describe("Users Endpoints", () => {
 
   beforeAll(() => {
+    user = MockUser.generate();
   });
 
-  afterAll(() => {
+  afterAll( async () => {
+    console.log('done');
+    console.log(userID);
+    const options = {
+      method: "DELETE",
+      uri: URL+"/"+userID,
+    };
+    const response = await request(options);
+    console.log('here');
+    console.log(response);
   });
 
   test("Test user input (unique) ", async () => {
-    const user = MockUser.generate();
     const options = {
       method: "POST",
       uri: URL+"/signup",
@@ -37,6 +47,7 @@ describe("Users Endpoints", () => {
     expect(response.lastName).toBe(user.lastName);
     expect(response.email).toBe(user.email);
     expect(response.password).toBe(user.password);
+    userID = response.id;
   });
 
   /**
@@ -47,10 +58,7 @@ describe("Users Endpoints", () => {
       method: "POST",
       uri: URL+"/signup",
       body: {
-        firstName: 'shayne',
-        lastName: 'preston',
-        email: 'shayne@shayne.com',
-        password: 'password',
+        email: user.email,
       },
       json: true
     };
@@ -70,14 +78,14 @@ describe("Users Endpoints", () => {
       method: "POST",
       uri: URL+'/email',
       body: {
-        email: 'shayne@shayne.com',
+        email: user.email,
       },
       json: true
     };
     const response = await request(options);
     console.log(response);
-    expect(response.email).toBe('shayne@shayne.com');
-    expect(response.id).toBe(148);
+    expect(response.email).toBe(user.email);
+    expect(response.id).toBe(userID);
   });
 
   /**
@@ -106,10 +114,10 @@ describe("Users Endpoints", () => {
   test("Get user by ID", async () => {
     const options = {
       method: "GET",
-      uri: URL+"/148",
+      uri: URL+"/"+userID,
     };
     const response = await request(options);
-    expect(response).toContain('shayne@shayne.com');
+    expect(response).toContain(user.email);
   });
 
   /**
@@ -118,70 +126,34 @@ describe("Users Endpoints", () => {
   test("Get user by invalid ID", async () => {
     const options = {
       method: "GET",
-      uri: URL+"/1",
+      uri: URL+"/0",
     };
     const response = await request(options);
     expect(response).toBe("");
   });
-
-  /**
-   * Update by valid ID
-   */
-  test("Update user by valid ID", async () => {
-    const options = {
-      method: "PUT",
-      uri: URL+"/148",
-      body: {
-        firstName: 'shayne',
-        lastName: 'preston',
-        email: 'shayne@shayne.com',
-        password: 'password', 
-      },
-      json: true
-    };
-    const response = await request(options);
-    console.log(response);
-    expect(response).toContain(1);
-  })
-
-  test("Update user by invalid ID", async () => {
-    const options = {
-      method: "PUT",
-      uri: URL+"/1",
-      body: {
-        firstName: 'shayne',
-        lastName: 'preston',
-        email: 'shayne@shayne.com',
-        password: 'password', 
-      },
-      json: true
-    };
-    const response = await request(options);
-    console.log(response);
-    expect(response).toContain(0);
-  })
 
   test("signin valid email/passwod", async () => {
     const options = {
       method: "POST",
       uri: URL+"/signin",
       body: {
-        email: 'shayne@shayne.com',
-        password: 'password', 
+        email: user.email,
+        password: user.password, 
       },
       json: true
     };
+    console.log(options);
     const response = await request(options);
     console.log(response);
-    expect(response.id).toBe(148);
-  })
+    expect(response.id).toBe(userID);
+  });
 
   test("signin invalid email/passwod", async () => {
     const options = {
       method: "POST",
       uri: URL+"/signin",
       body: {
-        email: 'shayne@shayne.com',
+        email: 'youwillnevergetin@yahoooo.com',
         password: 'wrongpassword', 
       },
       json: true
@@ -190,7 +162,45 @@ describe("Users Endpoints", () => {
       await request(options)
     } catch(error) {
       console.log(error.message);
-      expect(error.message).toContain('400 - undefined');
+      expect(error.message).toContain('400');
     }
-  })
+  });
+
+  /**
+   * Update by valid ID
+   */
+  test("Update user by valid ID", async () => {
+    const options = {
+      method: "PUT",
+      uri: URL+"/"+userID,
+      body: {
+        firstName: 'newFirstName',
+        lastName: 'newLastName',
+        email: user.email,
+        password: 'newPassword', 
+      },
+      json: true
+    };
+    const response = await request(options);
+    console.log(response.id);
+    expect(response.firstName).toBe('newFirstName');
+    expect(response.lastName).toBe('newLastName');
+    expect(response.password).toBe('newPassword');
+  });
+
+  test("Update user by invalid ID", async () => {
+    const options = {
+      method: "PUT",
+      uri: URL+"/0",
+      body: {
+        firstName: 'shayne',
+        lastName: 'preston',
+        email: 'shayne@shayne.com',
+        password: 'password', 
+      },
+      json: true
+    };
+    const response = await request(options);
+    expect(response).toBe(undefined);
+  });
 });
