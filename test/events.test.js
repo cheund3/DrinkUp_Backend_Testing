@@ -94,23 +94,21 @@ describe("Events Endpoints", () => {
   });
 
   test("Close an event", async () => {
-    const onSpotCreate = {
-      method: "POST",
-      uri: URL,
-      body: {
-        name: 'Close Event Dummy',
-        owner: '148'
-      },
-      json: true
-    };
-    const response = await request(onSpotCreate);
-    console.log(URL+'/closeEvent/'+'205');
-    const closer = {
+    const options = {
       method: "PUT",
-      uri: URL + '/closeEvent/'+ response.id
+      uri: URL+ '/closeEvent/' + eventID
     };
-    const checker = await request(closer);
-    console.log(checker);
-    expect(checker).toContain(1);
+    const response = await request(options);
+    expect(response).toContain(eventID);
+    expect(response).toContain(true);
+  })
+
+  test("Close an invalid event", async () => {
+    const options = {
+      method: "PUT",
+      uri: URL+ '/closeEvent/0'
+    };
+    const response = await request(options);
+    expect(response).toBe('');
   })
 });
