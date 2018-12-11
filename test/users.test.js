@@ -18,15 +18,11 @@ describe("Users Endpoints", () => {
   });
 
   afterAll( async () => {
-    console.log('done');
-    console.log(userID);
     const options = {
       method: "DELETE",
       uri: URL+"/"+userID,
     };
     const response = await request(options);
-    console.log('here');
-    console.log(response);
   });
 
   test("Test user input (unique) ", async () => {
@@ -42,7 +38,6 @@ describe("Users Endpoints", () => {
       json: true
     };
     const response = await request(options);
-    console.log(response);
     expect(response.firstName).toBe(user.firstName);
     expect(response.lastName).toBe(user.lastName);
     expect(response.email).toBe(user.email);
