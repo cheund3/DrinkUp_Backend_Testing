@@ -1,6 +1,12 @@
 # DrinkUp-Backend-Testing
 #### Shayne Preston, Dylan Cheung, Jeffrey Poegel, Jason Hall
 
+## Installation
+
+1. Clone Repo from github to local machine
+2. run 'npm install' to download jest and respected packages
+3. To run test suites execute 'npm run test' from the commandline within the directory of your project
+
 ## Overview
 
 Jest testing for SD&D Drink Up Backend endpoints. Each test suite generates a random fresh entity and then applies tests to it, that entity is then removed after for cleanliness
